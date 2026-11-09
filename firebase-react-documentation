@@ -2,7 +2,7 @@ On GitHub → click “Use this template” → Create a new repository.
 
 In the Firebase console, Add Your App --> Web App --> Copy the configuration and replace it in firebase.js 
 
-Enable Auth, Firestore, Storage, Hosting. With Firestore and Storage, start in production mode.
+Enable Auth, Firestore, Hosting. With Firestore, start in production mode.
 Use git clone to clone the repository to your local machine 
 
 From the command line, run npm install firebase (in your working directory) to add the Firebase JavaScript SDK to React project.
@@ -10,7 +10,7 @@ From the command line, run npm install firebase (in your working directory) to a
 Run firebase init 
 ✔ Are you ready to proceed? Yes
 ✔ Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices.
-Select firestore, storage, and hosting 
+Select firestore and hosting 
 
 === Project Setup
 ✔ Please select an option: Use an existing project
@@ -30,14 +30,10 @@ Select firestore, storage, and hosting
 ✔ Set up automatic deployment to your site's live channel when a PR is merged? Yes
 ✔ What is the name of the GitHub branch associated with your site's live channel? main
 
-=== Storage Setup
-✔ What file should be used for Storage Rules? storage.rules
-
-Replace the Firestore and Storage rules in the local firestore.rules and storage.rules files with the rules provided in this README. 
+Replace the Firestore rules in the local firestore.rules file with the rules provided in this README. 
 Then run the following command to deploy the updated rules to Firebase:
 
 firebase deploy --only firestore:rules
-firebase deploy --only storage
 
 This updates the rules in the Firebase Console to match the local rule files.
 

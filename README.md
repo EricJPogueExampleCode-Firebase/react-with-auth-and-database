@@ -71,7 +71,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 # Firebase Security Rules Setup
 
-This project uses Firebase Firestore and Storage with secure production rules.
+This project uses Firebase Firestore with secure production rules.
 The rules are managed locally and deployed to Firebase using the Firebase CLI.
 
 ## Firestore Rules
@@ -99,45 +99,10 @@ service cloud.firestore {
 3. Deploy the Firestore rules:
    firebase deploy --only firestore:rules
 
-## Storage Rules
-
-1. After running firebase init and selecting Storage, the storage.rules file is generated.
-2. Open storage.rules and replace the default rules with:
-
-```
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-
-    // Match files in the "uploads" folder, named with the user's UID
-    match /uploads/{userId}/{allPaths=**} {
-      // Only allow the user who owns the folder to read/write
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Deny all other access
-    match /{allPaths=**} {
-      allow read, write: if false;
-    }
-  }
-}
-```
-
-3. Deploy the Storage rules:
-   firebase deploy --only storage
-
-## Deploy Both Rules
-To deploy both Firestore and Storage rules at the same time:
-
-firebase deploy --only firestore:rules,storage
-
-After making changes to either rule file, run the appropriate deployment command again.
+After making changes to the Firestore rules, deploy them again with firebase deploy --only firestore:rules.
 
 ## Important Notes
  Make sure users are authenticated (Google Sign-In is enabled for this app).
  
- Files must be uploaded to the correct path:
-   uploads/{user.uid}/{fileName}
-
  Firestore documents must follow:
    users/{user.uid}

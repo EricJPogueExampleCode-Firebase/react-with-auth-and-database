@@ -5,9 +5,6 @@ import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { db } from "./firebase";
 import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 
-import { storage } from "./firebase";
-import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
-
 
 function Square({ value, onSquareClick }) {
   return (
@@ -70,10 +67,6 @@ function Game({ user }) {
   // Added state to display all users 
   const [allUsers, setAllUsers] = useState([]);
 
-  // Added state for file upload
-  const [file, setFile] = useState(null);
-  const [files, setFiles] = useState([]);
-
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
@@ -134,50 +127,6 @@ function Game({ user }) {
     }
   };
 
-// Added upload file
-const uploadFile = async () => {
-  if (!file) return;
-
-  try {
-    const fileRef = ref(storage, `uploads/${user.uid}/${file.name}`);
-    await uploadBytes(fileRef, file);
-
-    alert("File uploaded!");
-
-    // reload files after upload
-    const listRef = ref(storage, `uploads/${user.uid}/`);
-    const res = await listAll(listRef);
-
-    const urls = await Promise.all(
-      res.items.map((item) => getDownloadURL(item))
-    );
-
-    setFiles(urls);
-  } catch (err) {
-    console.error("Upload error:", err);
-  }
-};
-
-// Added load files on mount
-useEffect(() => {
-  const loadFiles = async () => {
-    try {
-      const listRef = ref(storage, `uploads/${user.uid}/`); 
-      const res = await listAll(listRef);
-
-      const urls = await Promise.all(
-        res.items.map((item) => getDownloadURL(item))
-      );
-
-      setFiles(urls);
-    } catch (err) {
-      console.error("Error loading files:", err);
-    }
-  };
-
-  loadFiles();
-}, [user.uid]);
-
   return (
     <div className="game">
       {/* Added logout */} 
@@ -208,36 +157,6 @@ useEffect(() => {
               {allUsers.map((u, index) => (
                 <p key={index}>
                   {u.name} - {u.email} 
-                </p>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Added storage UI */}
-        <div style={{ marginTop: "30px" }}>
-          <h3>Upload File</h3>
-
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-
-          <button onClick={uploadFile} style={{ marginLeft: "10px" }}>
-            Upload
-          </button>
-        </div>
-
-        {/* Display uploaded files */}
-        <div style={{ marginTop: "20px" }}>
-          {files.length === 0 ? null : (
-            <div>
-              <h3>Uploaded Files:</h3>
-              {files.map((url, index) => (
-                <p key={index}>
-                  <a href={url} target="_blank" rel="noreferrer">
-                    {url}
-                  </a>
                 </p>
               ))}
             </div>
